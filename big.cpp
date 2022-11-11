@@ -1,16 +1,20 @@
-//Yousef Abdalla Attia
-//yabdalla463@gmail.com
+// Authors :
+// Yousef Abdalla Attia
+//ID/ 20210475
+//Toqa Yasser Youssef abd El Hamed
+//ID/ 20211023
+//Abderahman Adel Abdelazieem Ahmed
+//ID/20211059
+// Suprevised By : Dr.Mohamed ElRamly
+// Task1
 #include <bits/stdc++.h>
+#include "BIGINT.h"
 using namespace std;
-
-class BIGINT {
-    string digits;
-public:
-    string getter() {
+    string BIGINT::getter() {
         return digits;
     }
     // for stirngs
-    BIGINT(string s) {
+    BIGINT::BIGINT(string s) {
         digits = "";
         //get length
         int sz = s.size();
@@ -31,7 +35,7 @@ public:
     }
 
     // for int values
-    BIGINT(int decint) {
+    BIGINT::BIGINT(int decint) {
         // convert int to string
         //store sign
         char sign = (decint == abs(decint) ? '+' : '-');
@@ -48,7 +52,110 @@ public:
         digits = sign + digits;
     }
 
-    BIGINT operator+ (BIGINT b) {
+
+
+bool BIGINT :: operator < (BIGINT obj){
+        if ((digits[0] == '+' && obj.digits[0] == '-')){
+            return false;
+        }
+        else if (digits[0] == '-' && obj.digits[0] == '+'){
+            return true;
+        }
+        else if (digits[0] == '+' && obj.digits[0] == '+' && digits.size() > obj.digits.size()){
+            return false;
+        }
+        else if (digits[0] == '+' && obj.digits[0] == '+' && digits.size() < obj.digits.size()){
+            return true;
+        }
+        else if (digits[0] == '-' && obj.digits[0] == '-' && digits.size() > obj.digits.size()){
+            return true;
+        }
+        else if (digits[0] == '-' && obj.digits[0] == '-' && digits.size() > obj.digits.size()){
+            return false;
+        }
+        else{
+            if (digits[0] == '+') {
+                for (int i = 0; i < digits.size(); i++) {
+                    if (digits[i] > obj.digits[i]) {
+                        return false;
+                    } else if (digits[i] < obj.digits[i]) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else{
+                for (int i = 0; i < digits.size(); i++) {
+                    if (digits[i] > obj.digits[i]) {
+                        return true;
+                    }
+                    else if (digits[i] < obj.digits[i]) {
+                        return false;
+                    }
+                }
+                return false;
+            }
+        }
+    }
+
+     bool BIGINT :: operator > (BIGINT obj){
+    if ((digits[0] == '+' && obj.digits[0] == '-')){
+        return true;
+    }
+    else if (digits[0] == '-' && obj.digits[0] == '+'){
+        return false;
+    }
+    else if (digits[0] == '+' && obj.digits[0] == '+' && digits.size() > obj.digits.size()){
+        return true;
+    }
+    else if (digits[0] == '+' && obj.digits[0] == '+' && digits.size() < obj.digits.size()){
+        return false;
+    }
+    else if (digits[0] == '-' && obj.digits[0] == '-' && digits.size() > obj.digits.size()){
+        return false;
+    }
+    else if (digits[0] == '-' && obj.digits[0] == '-' && digits.size() > obj.digits.size()){
+        return true;
+    }
+    else{
+        if (digits[0] == '+') {
+            for (int i = 0; i < digits.size(); i++) {
+                if (digits[i] > obj.digits[i]) {
+                    return true;
+                } else if (digits[i] < obj.digits[i]) {
+                    return false;
+                }
+            }
+            return false;
+        }
+        else{
+            for (int i = 0; i < digits.size(); i++) {
+                if (digits[i] > obj.digits[i]) {
+                    return false;
+                }
+                else if (digits[i] < obj.digits[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
+   bool BIGINT :: operator == (BIGINT obj){
+        if ((digits[0] == '-' && obj.digits[0] == '+') || (digits[0] == '+' && obj.digits[0] == '-') || (digits.size() != obj.digits.size())){
+            return false;
+        }
+        else{
+            for (int i = 0; i < digits.size(); i++){
+                if (digits[i] != obj.digits[i]){
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    BIGINT BIGINT ::  operator+ (BIGINT b) {
 
         string str1 = digits, str2 = b.getter(),tempi;
         string total_sign="";
@@ -60,8 +167,8 @@ public:
         else if(str1.length() == str2.length()){
             for(int i=1; i<str1.length(); i++){
                 if(str1[i] > str2[i]){
-                    swap(str1,str2);
-                    break;
+                swap(str1,str2);
+                break;
                 }
                 else if(str1[i] < str2[i])
                     break;
@@ -74,47 +181,48 @@ public:
         // get length
         int n1 = str1.length(), n2 = str2.length();
 
-        switch(str1[0]){
-            case '-' :
-                if(str2[0] == '+')
-                    total_sign+="-++";
-                else
-                    total_sign+="-+-";
-                break;
+switch(str1[0]){
+   case '-' :
+    if(str2[0] == '+')
+        total_sign+="-++";
+    else
+        total_sign+="-+-";
+    break;
 
-            case '+':
-                if(str2[0] == '+')
-                    total_sign+="+++";
-                else
-                    total_sign+="++-";
-                break;
-
-
-        }
-        if(total_sign=="++-" || total_sign=="-++" ){
-            str1 = str1.substr(1, str1.size());
-            str2 = str2.substr(1, str2.size());
-            BIGINT num(str1);
-            BIGINT num2(str2);
-            BIGINT result = num2-num;
-            string o = result.getter();
-            o = o.substr(1, o.size());
-            if(total_sign=="++-"){
-                reverse(o.begin(),o.end());
-                o+='-';
-                reverse(o.begin(),o.end());
-            }
-            result.setter(o);
-            return result;
+   case '+':
+    if(str2[0] == '+')
+        total_sign+="+++";
+    else
+        total_sign+="++-";
+    break;
 
 
         }
+if(total_sign=="++-" || total_sign=="-++" ){
+
+    str1 = str1.substr(1, str1.size());
+    str2 = str2.substr(1, str2.size());
+    BIGINT num(str1);
+    BIGINT num2(str2);
+    BIGINT result = num2-num;
+    string o = result.getter();
+     o = o.substr(1, o.size());
+     if(total_sign=="++-"){
+    reverse(o.begin(),o.end());
+    o+='-';
+    reverse(o.begin(),o.end());
+     }
+    result.setter(o);
+    return result;
+
+
+}
 
 
 
 // get strings without signs
         str1 = str1.substr(1, str1.size());
-        n1--;
+       n1--;
 
         str2 = str2.substr(1, str2.size());
         n2--;
@@ -142,7 +250,7 @@ public:
         if (carry)
             str.push_back(carry + '0');
         // get str back
-        // str+='+';
+       // str+='+';
         reverse(str.begin(), str.end());
         if(total_sign=="-+-"){
             reverse(str.begin(),str.end());
@@ -154,7 +262,7 @@ public:
         return num3;
     }
 
-    BIGINT operator- (BIGINT b) {
+     BIGINT BIGINT :: operator -  (BIGINT b) {
 
         string str1 = digits, str2 = b.getter(),total_sign;
         char sign = (str1 < str2 ? '-' : '+');
@@ -176,39 +284,41 @@ public:
         }
 
         //make str1 the big
+/*        if (str1 < str2)
+            swap(str1, str2);*/
         //new str
 
         switch(str1[0]){
-            case '-' :
-                if(str2[0] == '+')
-                    total_sign+="--+";
-                else
-                    total_sign+="---";
-                break;
+   case '-' :
+    if(str2[0] == '+')
+        total_sign+="--+";
+    else
+        total_sign+="---";
+    break;
 
-            case '+':
-                if(str2[0] == '+')
-                    total_sign+="+-+";
-                else
-                    total_sign+="+--";
-                break;
+   case '+':
+    if(str2[0] == '+')
+        total_sign+="+-+";
+    else
+        total_sign+="+--";
+    break;
         }
-        if(total_sign=="--+" || total_sign=="negative_--+" || total_sign=="negative_+--" || total_sign=="+--"){
-            str1 = str1.substr(1, str1.size());
-            str2 = str2.substr(1, str2.size());
-            BIGINT num(str1);
-            BIGINT num2(str2);
-            BIGINT result = num2+num;
-            string o = result.getter();
-            if(total_sign=="--+" || total_sign=="negative_+--"){
-                o = o.substr(1,o.size());
-                reverse(o.begin(),o.end());
-                o+="-";
-                reverse(o.begin(),o.end());
-            }
-            result.setter(o);
-            return result;
-        }
+    if(total_sign=="--+" || total_sign=="negative_--+" || total_sign=="negative_+--" || total_sign=="+--"){
+        str1 = str1.substr(1, str1.size());
+    str2 = str2.substr(1, str2.size());
+    BIGINT num(str1);
+    BIGINT num2(str2);
+    BIGINT result = num2+num;
+    string o = result.getter();
+    if(total_sign=="--+" || total_sign=="negative_+--"){
+    o = o.substr(1,o.size());
+    reverse(o.begin(),o.end());
+    o+="-";
+    reverse(o.begin(),o.end());
+    }
+    result.setter(o);
+    return result;
+    }
         string str = "";
         // get length
         int n1 = str1.length(), n2 = str2.length();
@@ -280,98 +390,15 @@ public:
         return ans;
 
     }
-
-    bool operator< (BIGINT b){
-
-        string digits2=b.getter();
-        // sign different
-        if (digits[0]=='-'&& digits2[0]=='+')return true;
-
-        // if same sign and length compare every digit
-        if ((digits[0]=='.'?0:1)==b.sign()&& digits.size()==digits2.size()){
-            for (int i = 1; i < digits.size() ; i++){
-                if (digits[i]!=digits2[i]){
-                    return (digits[i]<digits2[i]);
-                }
-            }
-            // if them equal
-            return false;
-        }
-        // length1 less
-        if (digits.size()<digits2.size())return true;
-        // all cases false no way to get true
-        return false;
-    }
-
-    bool operator> (BIGINT b){
-
-        string digits2=b.getter();
-        // sign different
-        if (digits[0]=='+'&& digits2[0]=='-')return true;
-
-        // if same sign and length compare every digit
-        if ((digits[0]=='.'?0:1)==b.sign()&& digits.size()==digits2.size()){
-            for (int i = 1; i < digits.size() ; i++){
-                if (digits[i]!=digits2[i]){
-                    return (digits[i]>digits2[i]);
-                }
-            }
-            // if them equal
-            return false;
-        }
-        // length1 less
-        if (digits.size()>digits2.size())return true;
-
-        // all cases false no way to get true
-        return false;
-
-    }
-
-    bool operator==(BIGINT b){
-        string digits2=b.getter();
-        // if same sign and length compare every digit
-        if ((digits[0]=='.'?0:1)==b.sign()&& digits.size()==digits2.size()){
-            for (int i = 1; i < digits.size() ; i++){
-                if (digits[i]!=digits2[i]){
-                    return false;
-                }
-            }
-            // if them equal
-            return true;
-        }
-        return false;
-    }
     // get digits length
-    int Length() {
-        return digits.size();
-    }
 
-    void setter(string s){
-        digits = s;
-    }
-
-    // get sign
-    int sign() {
-        //false for  negative true for positive
-        if (digits[0] == '-')return 0;
-        return true;
-    }
-
-};
 
 ostream& operator << (ostream& out, BIGINT a){
-    cout<<a.getter();
+    cout<<"Number is " << a.getter();
     return out;
 }
 
 
 
 
-int main() {
 
-    BIGINT i("+200");
-    BIGINT j("+4");
-    cout<<i-j;
-
-
-}
